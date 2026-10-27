@@ -1,23 +1,24 @@
+using AdPlay.Api.Data;
+using Microsoft.EntityFrameworkCore;
+using AdPlay.Api.Services;
+ 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
+ 
+var connString = builder.Configuration.GetConnectionString("Default")!;
+builder.Services.AddDbContext<AppDbContext>(o =>
+    o.UseMySql(connString, ServerVersion.AutoDetect(connString)));
+ 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddScoped<PaymentService>();
+builder.Services.AddSingleton<IPaymentProvider, FakePaymentProvider>();
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
+ 
 if (app.Environment.IsDevelopment())
-{
     app.MapOpenApi();
-}
-
+ 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
 app.MapControllers();
-
+ 
 app.Run();
