@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AdPlay.Api/AdPlay.Api.csproj" />
+    <Project Path="src/AdPlay.Linq/AdPlay.Linq.csproj" />
+  </Folder>
+</Solution>
