@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<PaymentService>();
 builder.Services.AddSingleton<IPaymentProvider, FakePaymentProvider>();
+builder.Services.AddScoped<QueryService>();
 
 var app = builder.Build();
  

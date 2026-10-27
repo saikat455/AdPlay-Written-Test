@@ -10,6 +10,9 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Payment> Payments => Set<Payment>();
     public DbSet<WebhookEvent> WebhookEvents => Set<WebhookEvent>();
+    public DbSet<Product> Products => Set<Product>();
+    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Brand> Brands => Set<Brand>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -41,6 +44,25 @@ public class AppDbContext : DbContext
         {
             e.Property(x => x.EventId).HasMaxLength(100).IsRequired();
             e.HasIndex(x => x.EventId).IsUnique();
+        });
+
+        b.Entity<Category>(e => e.Property(x => x.Name).HasMaxLength(100).IsRequired());
+        b.Entity<Brand>(e => e.Property(x => x.Name).HasMaxLength(100).IsRequired());
+
+        b.Entity<Product>(e =>
+        {
+            e.ToTable("CatalogProducts");
+            e.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            e.Property(x => x.Price).HasPrecision(12, 2);
+
+            e.HasOne(x => x.Category).WithMany().HasForeignKey(x => x.CategoryId);
+            e.HasOne(x => x.Brand).WithMany().HasForeignKey(x => x.BrandId);
+
+            e.HasIndex(x => x.Name);
+            e.HasIndex(x => x.Price);
+            e.HasIndex(x => x.CreatedAt);
+            e.HasIndex(x => new { x.CategoryId, x.Price });
+            e.HasIndex(x => new { x.BrandId, x.Price });
         });
     }
 }
