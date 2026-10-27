@@ -1,6 +1,7 @@
 using AdPlay.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using AdPlay.Api.Services;
+using AdPlay.Api.Middleware;
  
 var builder = WebApplication.CreateBuilder(args);
  
@@ -15,6 +16,7 @@ builder.Services.AddSingleton<IPaymentProvider, FakePaymentProvider>();
 builder.Services.AddScoped<QueryService>();
 
 var app = builder.Build();
+app.UseMiddleware<RequestLoggingMiddleware>();
  
 if (app.Environment.IsDevelopment())
     app.MapOpenApi();
